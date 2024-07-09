@@ -1,0 +1,57 @@
+# Diretórios de build
+bin/
+obj/
+
+# Diretórios do usuário
+*.user
+*.vspscc
+*.vssscc
+
+# Diretórios de configuração do Visual Studio Code
+.vscode/
+
+# Diretórios de migração do Entity Framework
+Migrations/
+
+# Arquivos de log
+*.log
+
+# Arquivos de dados temporários
+*.suo
+*.tmp
+*.user
+*.userosscache
+*.sln.docstates
+
+# Arquivos de configurações específicas do Visual Studio
+.vs/
+
+# Pacotes e dependências do NuGet
+packages/
+.nuget/
+
+# Diretórios de publicação
+publish/
+out/
+
+# Configurações específicas da máquina
+appsettings.Development.json
+appsettings.Local.json
+
+# Arquivos de configuração de depuração e lançamento
+launchSettings.json
+
+# Arquivos gerados pela compilação
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Restrições de ambiente
+env/
+
+# Arquivos de configuração de containers
+.docker/
+
+# Arquivos e diretórios para testar e debugar
+*.tlog
+*.log

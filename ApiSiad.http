@@ -1,0 +1,6 @@
+@ApiSiad_HostAddress = http://localhost:5067
+
+GET {{ApiSiad_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
