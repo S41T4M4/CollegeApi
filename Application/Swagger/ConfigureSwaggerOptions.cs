@@ -24,7 +24,7 @@ namespace ApiSiad.Application.Swagger
         {
             var info = new OpenApiInfo()
             {
-                Title = "Web.API - Vitor Ibraim",
+                Title = "Web.API - Dev by : Vitor Ibraim",
                 Version = description.ApiVersion.ToString()
             };
 

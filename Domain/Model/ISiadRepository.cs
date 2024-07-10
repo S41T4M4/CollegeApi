@@ -11,7 +11,6 @@
         List<Alunos> GetAlunos();
         void UpdateAluno(Alunos aluno);
         void DeleteAluno(int aluno_id);
-
         void AddDisciplina(Disciplinas disciplina);
         List<Disciplinas> GetDisciplinas();
         void UpdateDisciplina(Disciplinas disciplina);
@@ -23,7 +22,10 @@
         void DeleteNota(int nota_id);
         List<object> GetTurmasAlunosDisciplinasNotas();
 
-        // Método adicionado
+        Task<IEnumerable<Notas>> GetNotasByAlunoAsync(int aluno_id);
         Turmas GetTurmaById(int turmaId);
+        decimal CalcularMediaNotas(IEnumerable<Notas> notas);
+        List<AlunoCsvModel> ObterDadosParaCsv();
+
     }
 }

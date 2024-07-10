@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using ApiSiad.Domain;
 using ApiSiad.Application.ViewModel;
 using Microsoft.EntityFrameworkCore;
+using CsvHelper.Configuration;
+using CsvHelper;
+using System.Globalization;
+using System.Text;
 
 
 namespace ApiSiad.Controllers.v1
@@ -278,5 +282,59 @@ namespace ApiSiad.Controllers.v1
             var result = _siadRepository.GetTurmasAlunosDisciplinasNotas();
             return Ok(result);
         }
+        [HttpGet("alunos/{aluno_id}/notas")]
+        public async Task<ActionResult<IEnumerable<Notas>>> GetNotasByAluno(int aluno_id)
+        {
+            var notas = await _siadRepository.GetNotasByAlunoAsync(aluno_id);
+
+            if (notas == null)
+            {
+                return NotFound(new { message = "Nenhuma nota encontrada para este aluno." });
+            }
+
+            return Ok(notas);
+        }
+
+
+        [HttpGet("alunos/{aluno_id}/media")]
+        public async Task<ActionResult<decimal>> GetMediaNotasByAluno(int aluno_id)
+        {
+            var notas = await _siadRepository.GetNotasByAlunoAsync(aluno_id);
+
+            if (notas == null)
+            {
+                return NotFound(new { message = "Nenhuma nota encontrada para este aluno." });
+            }
+
+            var media = _siadRepository.CalcularMediaNotas(notas);
+            return Ok(media);
+        }
+        [HttpGet("download-alunos-notas-csv")]
+        public IActionResult DownloadAlunosNotasCSV()
+        {
+            try
+            {
+                var alunosNotasList = _siadRepository.ObterDadosParaCsv(); // Utiliza o método que você implementou para obter dados para o CSV
+
+                var memoryStream = new MemoryStream();
+
+                using (var streamWriter = new StreamWriter(memoryStream, Encoding.UTF8, 1024, true))
+                {
+                    using (var csvWriter = new CsvWriter(streamWriter, new CsvConfiguration(CultureInfo.InvariantCulture)))
+                    {
+                        csvWriter.WriteRecords(alunosNotasList);
+                    }
+                }
+
+                memoryStream.Seek(0, SeekOrigin.Begin);
+
+                return File(memoryStream, "text/csv", "Download_Alunos_Notas.csv");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao gerar CSV: {ex.Message}");
+            }
+        }
+
     }
 }

@@ -16,6 +16,6 @@ namespace ApiSiad.Domain.Model
         [ForeignKey("Turmas")] 
         public int turma_id { get; set; }
 
-        public Turmas Turma { get; set; } 
+      
     }
 }

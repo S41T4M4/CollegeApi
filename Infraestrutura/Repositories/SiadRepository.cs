@@ -204,7 +204,46 @@ namespace ApiSiad.Infraestrutura.Repositories
 
             return query.ToList<object>();
         }
+        public async Task<IEnumerable<Notas>> GetNotasByAlunoAsync(int aluno_id)
+        {
+            return await _context.Notas
+                .Where(n => n.aluno_id == aluno_id)
+                .ToListAsync();
+        }
 
-      
+        public decimal CalcularMediaNotas(IEnumerable<Notas> notas)
+        {
+            if (notas == null || !notas.Any())
+                return 0;
+
+            decimal somaNotas = notas.Sum(n => n.nota);
+            return somaNotas / notas.Count();
+        }
+        public List<AlunoCsvModel> ObterDadosParaCsv()
+        {
+            List<AlunoCsvModel> alunosCsv = new List<AlunoCsvModel>();
+
+            var alunos = _context.Alunos.ToList();
+
+            foreach (var aluno in alunos)
+            {
+                var turma = _context.Turmas.FirstOrDefault(t => t.turma_id == aluno.turma_id);
+                var notas = _context.Notas.Where(n => n.aluno_id == aluno.aluno_id).ToList();
+                decimal mediaNotas = CalcularMediaNotas(notas);
+                string status = mediaNotas >= 6 ? "Aprovado" : "Reprovado";
+
+                alunosCsv.Add(new AlunoCsvModel
+                {
+                    aluno_id = aluno.aluno_id,
+                    nome = aluno.nome,
+                    turma_nome = turma != null ? turma.nome : "N/A",
+                    media_notas = mediaNotas,
+                    status = status
+                });
+            }
+
+            return alunosCsv;
+        }
+
     }
 }

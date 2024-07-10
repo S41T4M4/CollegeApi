@@ -14,7 +14,7 @@ namespace ApiSiad.Domain.Model
         [MaxLength(255)]
         public string nome { get; set; }
 
-        // Relacionamento um-para-muitos com Alunos
-        public ICollection<Alunos> Alunos { get; set; }
+       
+ 
     }
 }
