@@ -314,8 +314,7 @@ namespace ApiSiad.Controllers.v1
         {
             try
             {
-                var alunosNotasList = _siadRepository.ObterDadosParaCsv(); // Utiliza o método que você implementou para obter dados para o CSV
-
+                var alunosNotasList = _siadRepository.ObterDadosParaCsv();
                 var memoryStream = new MemoryStream();
 
                 using (var streamWriter = new StreamWriter(memoryStream, Encoding.UTF8, 1024, true))
