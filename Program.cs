@@ -49,7 +49,7 @@ builder.Services.AddCors(options => {
 var app = builder.Build();
 var versionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

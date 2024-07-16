@@ -12,10 +12,14 @@ namespace ApiSiad.Domain.Model
         [Required]
         public decimal nota { get; set; }
 
+        
         [ForeignKey("Alunos")]
         public int aluno_id { get; set; }
 
         [ForeignKey("Disciplinas")]
         public int disciplina_id { get; set; }
+
+
     }
+
 }

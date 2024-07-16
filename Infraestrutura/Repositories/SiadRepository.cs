@@ -1,4 +1,5 @@
 ﻿using ApiSiad.Domain.Model;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace ApiSiad.Infraestrutura.Repositories
     public class SiadRepository : ISiadRepository
     {
         private readonly ConnectionContext _context = new ConnectionContext();
+       
         public void AddTurma(Turmas turma)
         {
             _context.Turmas.Add(turma);
@@ -53,11 +55,6 @@ namespace ApiSiad.Infraestrutura.Repositories
             var existingNota = _context.Notas
                 .FirstOrDefault(n => n.aluno_id == nota.aluno_id && n.disciplina_id == nota.disciplina_id);
 
-            if (existingNota != null)
-            {
-                throw new Exception($"Já existe uma nota cadastrada para o aluno {nota.aluno_id} na disciplina {nota.disciplina_id}");
-            }
-
             _context.Notas.Add(nota);
             _context.SaveChanges();
         }
@@ -66,26 +63,45 @@ namespace ApiSiad.Infraestrutura.Repositories
 
         public void DeleteAluno(int aluno_id)
         {
-            var aluno = _context.Alunos.Find(aluno_id);
-            if (aluno != null)
+            try
             {
-                _context.Alunos.Remove(aluno);
-                _context.SaveChanges();
+                var aluno = _context.Alunos.Find(aluno_id);
+                if (aluno != null)
+                {
+                    _context.Alunos.Remove(aluno);
+                    _context.SaveChanges();
+                }
+            
             }
-            else
+            catch (Exception ex)
             {
-                throw new KeyNotFoundException($"Aluno with ID {aluno_id} not found.");
+                Console.WriteLine("Impossivel deletar um aluno com notas cadastradas");
+              
             }
         }
 
         public void DeleteDisciplina(int disciplina_id)
         {
-            var disciplina = _context.Disciplinas.Find(disciplina_id);
-            if (disciplina != null)
+            try
             {
-                _context.Disciplinas.Remove(disciplina);
-                _context.SaveChanges();
+                var disciplina = _context.Disciplinas.Find(disciplina_id);
+                if (disciplina != null)
+                {
+                    _context.Disciplinas.Remove(disciplina);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("Impossivel deletar uma disciplina com alunos com notas cadastradas");
+                }
             }
+            catch
+            {
+                Console.WriteLine("Impossivel deletar disciplina com alunos");
+            }
+
+
+
         }
 
         public void DeleteNota(int nota_id)
@@ -96,6 +112,10 @@ namespace ApiSiad.Infraestrutura.Repositories
                 _context.Notas.Remove(nota);
                 _context.SaveChanges();
             }
+            else
+            {
+                throw new Exception("Não foi possivel deletar a nota");
+            }
         }
 
         public void DeleteTurma(int turmaId)
@@ -104,20 +124,18 @@ namespace ApiSiad.Infraestrutura.Repositories
             {
                 try
                 {
-                    // Obter todos os alunos da turma
+                   
                     var alunos = _context.Alunos.Where(a => a.turma_id == turmaId).ToList();
 
-                    // Apagar as notas dos alunos
+          
                     foreach (var aluno in alunos)
                     {
                         var notas = _context.Notas.Where(n => n.aluno_id == aluno.aluno_id).ToList();
                         _context.Notas.RemoveRange(notas);
                     }
 
-                    // Apagar os alunos da turma
                     _context.Alunos.RemoveRange(alunos);
 
-                    // Apagar a turma
                     var turma = _context.Turmas.Find(turmaId);
                     _context.Turmas.Remove(turma);
 
@@ -172,10 +190,6 @@ namespace ApiSiad.Infraestrutura.Repositories
             _context.Disciplinas.Update(disciplina);
             _context.SaveChanges();
         }
-
-
-
-
         public void UpdateTurma(Turmas turma)
         {
             _context.Turmas.Update(turma);

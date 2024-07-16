@@ -13,8 +13,7 @@ namespace ApiSiad.Domain.Model
         [Required]
         [MaxLength(255)]
         public string nome { get; set; }
-
-       
+    
  
     }
 }
